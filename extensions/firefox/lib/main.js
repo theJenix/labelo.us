@@ -3,17 +3,31 @@ const tabs = require("tabs");
 const cm   = require("context-menu");
 const data = require("self").data;
 
+var baseURL = 'http://localhost:3000/upload';
+function createLabelousPanel(url) {
+    console.log('Creating a panel with url: ' + url);
+    var panel = require("panel").Panel({
+        width: 360,
+        height: 180,
+        contentURL: url,
+        contentScriptFile: data.url('style-upload.js')
+    });
+    panel.on("show", function() {
+        panel.port.emit("show");
+    });
+    return panel;
+}
+
+var widgetPanel = createLabelousPanel(baseURL);
 var widget = widgets.Widget({
-  id: "mozilla-link",
-  label: "Mozilla website",
+  id: "labelous-widget",
+  label: "Labelo.us",
   contentURL: "http://www.mozilla.org/favicon.ico",
-  onClick: function() {
-    tabs.open("http://www.mozilla.org/");
-  }
+  panel: createLabelousPanel(baseURL)
 });
 
 cm.Item({
-  label: "Save Image",
+  label: "Send to labelo.us...",
   context: cm.SelectorContext("img"),
   contentScript: 'self.on("click", function (node, data) {' +
                  '  self.postMessage(node.src);' +
@@ -25,17 +39,7 @@ cm.Item({
 
 openTagAndSave = function(imageSrc) {
  
-    var panel = require("panel").Panel({
-        width: 360,
-        height: 180,
-        contentURL: data.url('tag-and-save.html'),
-        contentScriptFile: data.url('tag-and-save.js')
-    });
- 
-    panel.on("show", function() {
-        panel.port.emit("show", imageSrc);
-    });
- 
+    var panel = createLabelousPanel(baseURL + "?url=" + imageSrc);
     panel.show();
 }
 console.log("The add-on is running.");
