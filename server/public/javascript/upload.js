@@ -18,16 +18,23 @@
     }
 
     function label_input_keypress(e) {
-        if ( e.keyCode == 13 || e.keyCode == 32 || e.keyCode == 44) {
-            var label_text = $('#label_input').val();
-            add_label(label_text);
-            $('#label_input').val('');
+        var input = $('#label_input');
+        var code = e.keyCode || e.charCode;
+        if (code == 13 || code == 32 || code == 33 || code == 44 || code == 46 || code == 63) {
+            var label_text = input.val();
+            if (label_text != '') {
+                add_label(label_text);
+                input.val('');
+            }
             e.preventDefault(); 
         }
     }
 
     function add_label(label_text) {
         var label = $('<li>');
+        label.on("click", function(e) {
+            label.remove();
+        });
         label.text(label_text);
         $('#label_list').append(label);
     }

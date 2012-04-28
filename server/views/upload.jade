@@ -2,8 +2,8 @@
   form(action="/upload", method="POST")
     #main_form  
       #image
-        #filedrag(style='width:200px;height:200px;border:1px solid')
-          img#tgt_image(style='width:200px;height:200px')
+        #filedrag
+          img#tgt_image
         input(type="file", id="fileselect", name="fileselect[]", multiple="multiple")  
 
       #label
@@ -27,3 +27,4 @@
       });
      
       $(document).ready(function() {PresetUrl('tgt_image');});
+      styleUploadForm(32, 24);

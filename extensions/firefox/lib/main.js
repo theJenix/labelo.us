@@ -3,17 +3,23 @@ const tabs = require("tabs");
 const cm   = require("context-menu");
 const data = require("self").data;
 
+var width  = 360;
+var height = 180;
+
+var thumb_width  = width / 2;
+var thumb_height = height - 60;
+
 var baseURL = 'http://localhost:3000/upload';
 function createLabelousPanel(url) {
     console.log('Creating a panel with url: ' + url);
     var panel = require("panel").Panel({
-        width: 360,
-        height: 180,
+        width: width,
+        height: height,
         contentURL: url,
         contentScriptFile: data.url('style-upload.js')
     });
     panel.on("show", function() {
-        panel.port.emit("show");
+        panel.port.emit("show", thumb_width, thumb_height);
     });
     return panel;
 }
