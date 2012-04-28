@@ -1,0 +1,29 @@
+#upload
+  form(action="/upload", method="POST")
+    #main_form  
+      #image
+        #filedrag(style='width:200px;height:200px;border:1px solid')
+          img#tgt_image(style='width:200px;height:200px')
+        input(type="file", id="fileselect", name="fileselect[]", multiple="multiple")  
+
+      #label
+        ul#label_list
+        input#label_input(type='text')
+
+
+    #buttons
+        #submitbutton
+            input(type="submit")
+         button(id="cancelButton") Cancel
+
+      #messages
+  
+  script(type='text/javascript')
+      InstallHTML5ImageDragDrop('filedrag',   'tgt_image');
+      InstallHTML5ImageSelect  ('fileselect', 'tgt_image', 'filedrag');
+
+      $('#label_input').on('keypress', function(e) {
+          label_input_keypress(e);
+      });
+     
+      $(document).ready(function() {PresetUrl('tgt_image');});
