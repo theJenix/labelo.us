@@ -10,13 +10,13 @@ var thumb_width  = width / 2;
 var thumb_height = height - 60;
 
 var baseURL = 'http://localhost:3000/upload';
-function createLabelousPanel(url) {
+function createLabelousPanel(url, styleJs) {
     console.log('Creating a panel with url: ' + url);
     var panel = require("panel").Panel({
         width: width,
         height: height,
         contentURL: url,
-        contentScriptFile: data.url('style-upload.js')
+        contentScriptFile: data.url(styleJs)
     });
     panel.on("show", function() {
         panel.port.emit("show", thumb_width, thumb_height);
@@ -43,9 +43,26 @@ cm.Item({
   }
 });
 
+cm.Item({
+  label: "Search in labelo.us...",
+  context: cm.SelectionContext(),
+  contentScript: 'self.on("click", function (node, data) {' +
+                 '  self.postMessage(node.src);' +
+                 '});',
+  onMessage: function (text) {
+    openSearch(text);
+  }
+});
+
 openTagAndSave = function(imageSrc) {
  
-    var panel = createLabelousPanel(baseURL + "?url=" + imageSrc);
+    var panel = createLabelousPanel(baseURL + '?url=' + imageSrc, 'style-upload.js');
+    panel.show();
+}
+
+openSearch = function(text) {
+ 
+    var panel = createLabelousPanel(baseURL + '?search=' + text, 'style-search.js');
     panel.show();
 }
 console.log("The add-on is running.");
